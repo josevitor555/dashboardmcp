@@ -295,62 +295,62 @@ const App = () => {
                   </tr>
                 ) : (
 
-                  currentProjetos.map((projeto) => (
-                    <motion.tr
-                      key={projeto.id}
-                      className="border border-border hover:bg-muted"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.3, ease: 'easeOut' }}
-                    >
-                      <td className="px-4 py-2">{projeto.id}</td>
-                      <td className="px-4 py-2">{projeto.nome}</td>
-                      <td className="px-4 py-2">
-                        <Avatar
-                          src={projeto.avatarUrl}
-                          alt={projeto.cliente}
-                          fallback={projeto.cliente.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
-                        />
-                      </td>
-                      <td className="px-4 py-2">{projeto.categoria}</td>
-                      <td className="px-4 py-2 capitalize">
-                        <Badge variant={getStatusVariant(projeto.status)}>
-                          {projeto.status.replace('_', ' ')}
-                        </Badge>
-                      </td>
-                      <td className="px-4 py-2 capitalize">{projeto.prioridade}</td>
-                      <td className="px-4 py-2">{projeto.dataCriacao}</td>
-                      <td className="px-4 py-2 flex gap-2">
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="btn-primary flex items-center gap-1 cursor-pointer"
-                          title="Editar"
-                        >
-                          <Edit size={16} />
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="btn-primary flex items-center gap-1 cursor-pointer"
-                          title="Duplicar"
-                        >
-                          <Copy size={16} />
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="btn-primary flex items-center gap-1 cursor-pointer"
-                          title="Excluir"
-                          onClick={() => handleDeleteProjeto(projeto.id)}
-                        >
-                          <Trash2 size={16} />
-                        </motion.button>
-                      </td>
-                    </motion.tr>
-                  ))
-                )
+                    currentProjetos.map((projeto) => (
+                      <motion.tr
+                        key={projeto.id}
+                        className="border border-border hover:bg-muted"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.3, ease: 'easeOut' }}
+                      >
+                        <td className="px-4 py-2">{projeto.id}</td>
+                        <td className="px-4 py-2">{projeto.nome}</td>
+                        <td className="px-4 py-2">
+                          <Avatar
+                            src={projeto.avatarUrl}
+                            alt={projeto.cliente}
+                            fallback={projeto.cliente.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
+                          />
+                        </td>
+                        <td className="px-4 py-2">{projeto.categoria}</td>
+                        <td className="px-4 py-2 capitalize">
+                          <Badge variant={getStatusVariant(projeto.status)}>
+                            {projeto.status.replace('_', ' ')}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-2 capitalize">{projeto.prioridade}</td>
+                        <td className="px-4 py-2">{projeto.dataCriacao}</td>
+                        <td className="px-4 py-2 flex gap-2">
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="btn-primary flex items-center gap-1 cursor-pointer"
+                            title="Editar"
+                          >
+                            <Edit size={16} />
+                          </motion.button>
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="btn-primary flex items-center gap-1 cursor-pointer"
+                            title="Duplicar"
+                          >
+                            <Copy size={16} />
+                          </motion.button>
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="btn-primary flex items-center gap-1 cursor-pointer"
+                            title="Excluir"
+                            onClick={() => handleDeleteProjeto(projeto.id)}
+                          >
+                            <Trash2 size={16} />
+                          </motion.button>
+                        </td>
+                      </motion.tr>
+                    ))
+                  )
                 }
               </tbody>
             </AnimatePresence>
