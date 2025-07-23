@@ -5,7 +5,7 @@ Desenvolver um **dashboard de gerenciamento de projetos**, com foco em freelance
 
 > Por enquanto, foco apenas na interface visual. Backend será implementado futuramente.
 
-## Stack Tecnológica
+## Stack
 
 - **Frontend**
   - React + Vite

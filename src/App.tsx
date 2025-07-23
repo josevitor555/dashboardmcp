@@ -2,7 +2,7 @@
 import './App.css';
 import './index.css';
 
-// import { projetosMock } from './lib/projects-mock';
+import { projetosMock } from './lib/projects-mock';
 import { Edit, Copy, Trash2 } from 'lucide-react';
 
 // Adicionar importação do Avatar
@@ -11,11 +11,48 @@ import { Badge } from './lib/Badge';
 import type { Projeto } from './lib/projects-mock';
 import { ChevronFirst, ChevronLast, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDownIcon } from 'lucide-react';
 
+// DropdownMenu do Origin UI (adaptado)
+function DropdownMenu({ value, options, onChange, label }: { value: string; options: { value: string; label: string }[]; onChange: (v: string) => void; label: string }) {
+  const selected = options.find(opt => opt.value === value) || options[0];
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        className="flex items-center justify-between border border-border rounded px-2 py-2 bg-background text-foreground w-full min-w-[120px]"
+        onClick={() => setOpen(o => !o)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+      >
+        <span>{selected.label}</span>
+        <ChevronDownIcon className="ml-2 opacity-60" size={16} aria-hidden="true" />
+      </button>
+      {open && (
+        <ul className="absolute z-10 mt-1 w-full bg-card border border-border rounded shadow-lg" role="listbox">
+          {options.map(opt => (
+            <li
+              key={opt.value}
+              className={`px-4 py-2 cursor-pointer hover:bg-muted ${opt.value === value ? 'font-bold' : ''}`}
+              role="option"
+              aria-selected={opt.value === value}
+              onClick={() => { onChange(opt.value); setOpen(false); }}
+            >
+              {opt.label}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+// A component (Avatar)
 // Componente Avatar simplificado (mock do ShadCN)
 const Avatar = ({ src, alt, fallback }: { src?: string; alt?: string; fallback: string }) => (
   <button
-    className="flex items-center gap-2 border border-border rounded-full px-2 py-1 bg-[#fafafa] text-primary-foreground"
+    className="flex items-center gap-2 border border-border rounded-full px-2 py-1 bg-[#ffe0c2] text-primary-foreground"
     type="button"
     tabIndex={0}
     aria-label={`Cliente ${alt}`}
@@ -93,6 +130,7 @@ function getToday() {
   return new Date().toISOString().split('T')[0];
 }
 
+// A component (Modal)
 function ModalNovaTarefa({ open, onClose, onAdd }: { open: boolean; onClose: () => void; onAdd: (novoProjeto: any) => void }) {
   const [form, setForm] = React.useState({
     nome: '',
@@ -106,9 +144,11 @@ function ModalNovaTarefa({ open, onClose, onAdd }: { open: boolean; onClose: () 
     link: '',
     notas: '',
   });
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }));
   }
+  
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const novoProjeto = {
@@ -129,6 +169,7 @@ function ModalNovaTarefa({ open, onClose, onAdd }: { open: boolean; onClose: () 
     onClose();
   }
   if (!open) return null;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <form onSubmit={handleSubmit} className="bg-card rounded-lg shadow-lg p-6 w-full max-w-lg flex flex-col gap-4">
@@ -148,23 +189,32 @@ function ModalNovaTarefa({ open, onClose, onAdd }: { open: boolean; onClose: () 
         <div className="flex gap-2">
           <div className="flex flex-col gap-2 w-1/2">
             <label className="text-sm font-medium">Categoria</label>
-            <select name="categoria" value={form.categoria} onChange={handleChange} className="border border-border rounded px-2 py-2 bg-background text-foreground">
-              {categorias.map(cat => <option key={cat} value={cat}>{cat}</option>)}
-            </select>
+            <DropdownMenu
+              value={form.categoria}
+              options={categorias.map(c => ({ value: c, label: c }))}
+              onChange={v => setForm(f => ({ ...f, categoria: v }))}
+              label="Categoria"
+            />
           </div>
           <div className="flex flex-col gap-2 w-1/2">
             <label className="text-sm font-medium">Prioridade</label>
-            <select name="prioridade" value={form.prioridade} onChange={handleChange} className="border border-border rounded px-2 py-2 bg-background text-foreground">
-              {prioridadesDropdown.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
-            </select>
+            <DropdownMenu
+              value={form.prioridade}
+              options={prioridadesDropdown}
+              onChange={v => setForm(f => ({ ...f, prioridade: v }))}
+              label="Prioridade"
+            />
           </div>
         </div>
         <div className="flex gap-2">
           <div className="flex flex-col gap-2 w-1/2">
             <label className="text-sm font-medium">Status</label>
-            <select name="status" value={form.status} onChange={handleChange} className="border border-border rounded px-2 py-2 bg-background text-foreground">
-              {statusDropdown.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
-            </select>
+            <DropdownMenu
+              value={form.status}
+              options={statusDropdown}
+              onChange={v => setForm(f => ({ ...f, status: v }))}
+              label="Status"
+            />
           </div>
           <div className="flex flex-col gap-2 w-1/2">
             <label className="text-sm font-medium">Previsão de Entrega</label>
@@ -188,12 +238,13 @@ function ModalNovaTarefa({ open, onClose, onAdd }: { open: boolean; onClose: () 
   );
 }
 
+// Main component (App)
 const App = () => {
   const [search, setSearch] = React.useState('');
   const [status, setStatus] = React.useState('');
   const [prioridade, setPrioridade] = React.useState('');
-  // const [projetos, setProjetos] = React.useState(projetosMock);
-  const [projetos, setProjetos] = React.useState<Projeto[]>([]);
+  const [projetos, setProjetos] = React.useState(projetosMock);
+  // const [projetos, setProjetos] = React.useState<Projeto[]>([]);
 
   const projetosFiltrados = filterProjetos(projetos, search, status, prioridade);
 
@@ -235,7 +286,7 @@ const App = () => {
         </div>
         <button className="btn-primary whitespace-nowrap" onClick={() => setModalOpen(true)}>Nova Tarefa</button>
       </div>
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <input
           type="text"
           placeholder="Buscar tarefa ou cliente..."
@@ -244,24 +295,29 @@ const App = () => {
           className="border border-border rounded px-3 py-2 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring w-full md:w-72"
         />
         <div className="flex gap-2 items-center">
-          <select
+          <DropdownMenu
             value={status}
-            onChange={e => setStatus(e.target.value)}
-            className="border border-border rounded px-2 py-2 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          >
-            {statusOptions.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-          <select
+            options={statusOptions}
+            onChange={setStatus}
+            label="Status"
+          />
+          <DropdownMenu
             value={prioridade}
-            onChange={e => setPrioridade(e.target.value)}
-            className="border border-border rounded px-2 py-2 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          >
-            {prioridadeOptions.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
+            options={prioridadeOptions}
+            onChange={setPrioridade}
+            label="Prioridade"
+          />
+          <div className="flex items-center gap-3 ml-4">
+            <label htmlFor="rowsPerPage" className="text-sm text-muted-foreground whitespace-nowrap">
+              Linhas por página
+            </label>
+            <DropdownMenu
+              value={String(rowsPerPage)}
+              options={[5, 10, 25, 50].map(n => ({ value: String(n), label: String(n) }))}
+              onChange={v => { setRowsPerPage(Number(v)); setPage(0); }}
+              label="Linhas por página"
+            />
+          </div>
         </div>
       </div>
       <div className="bg-card rounded-lg shadow p-6">
@@ -358,22 +414,6 @@ const App = () => {
         </div>
       </div>
       <div className="flex items-center justify-between gap-8 mt-4">
-        {/* Results per page */}
-        <div className="flex items-center gap-3">
-          <label htmlFor="rowsPerPage" className="text-sm text-muted-foreground">
-            Linhas por página
-          </label>
-          <select
-            id="rowsPerPage"
-            value={rowsPerPage}
-            onChange={handleRowsPerPageChange}
-            className="border border-border bg-card text-foreground rounded focus:outline-none focus:ring-2 focus:ring-primary px-2 py-1"
-          >
-            {[5, 10, 25, 50].map((n) => (
-              <option key={n} value={n}>{n}</option>
-            ))}
-          </select>
-        </div>
         {/* Page number information */}
         <div className="text-muted-foreground flex grow justify-end text-sm whitespace-nowrap">
           <span className="text-foreground">
