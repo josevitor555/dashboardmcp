@@ -1,5 +1,6 @@
 // Estrutura de dados mock para projetos de clientes
 export type Projeto = {
+  notas: string;
   id: string;
   nome: string;
   cliente: string;
@@ -18,7 +19,7 @@ export const projetosMock: Projeto[] = [
     id: 'TASK-8782',
     nome: 'Compressão SSD Open Source',
     cliente: 'Carlos Silva',
-    avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
+    avatarUrl: 'https://randomuser.me/api/portraits/men/20.jpg',
     categoria: 'Sistemas Internos',
     status: 'in_progress',
     prioridade: 'media',
@@ -26,6 +27,7 @@ export const projetosMock: Projeto[] = [
     dataEntrega: '2024-06-01',
     descricao: 'Você não pode comprimir o programa sem quantificar o SSD open-source.',
     link: '',
+    notas: ""
   },
   {
     id: 'TASK-7878',
@@ -38,6 +40,7 @@ export const projetosMock: Projeto[] = [
     dataCriacao: '2024-04-15',
     descricao: 'Tente calcular o feed EXE, talvez ele indexe o pixel multi-byte!',
     link: '',
+    notas: ""
   },
   {
     id: 'TASK-7839',
@@ -50,6 +53,7 @@ export const projetosMock: Projeto[] = [
     dataCriacao: '2024-05-10',
     descricao: 'Precisamos contornar o cartão neural TCP!',
     link: '',
+    notas: ""
   },
   {
     id: 'TASK-5562',
@@ -62,18 +66,7 @@ export const projetosMock: Projeto[] = [
     dataCriacao: '2024-05-12',
     descricao: 'A interface SAS está fora, precisamos contornar o pixel open-source.',
     link: '',
-  },
-  {
-    id: 'TASK-8686',
-    nome: 'Parse SSL Protocol',
-    cliente: 'Fernanda Souza',
-    avatarUrl: 'https://randomuser.me/api/portraits/women/33.jpg',
-    categoria: 'Landing Page',
-    status: 'canceled',
-    prioridade: 'baixa',
-    dataCriacao: '2024-05-15',
-    descricao: 'Vou analisar o protocolo SSL wireless, isso deve acionar o painel da API!',
-    link: '',
+    notas: ""
   },
   {
     id: 'TASK-1280',
@@ -86,6 +79,7 @@ export const projetosMock: Projeto[] = [
     dataCriacao: '2024-05-18',
     descricao: 'Use o painel TLS digital para transmitir o sistema háptico!',
     link: '',
+    notas: ""
   },
   {
     id: 'TASK-7262',
@@ -98,6 +92,7 @@ export const projetosMock: Projeto[] = [
     dataCriacao: '2024-05-20',
     descricao: 'A aplicação UTF8 está fora, analisar a largura de banda neural.',
     link: '',
+    notas: ""
   },
   {
     id: 'TASK-1138',
@@ -110,6 +105,7 @@ export const projetosMock: Projeto[] = [
     dataCriacao: '2024-05-22',
     descricao: 'Gerar o driver não faz nada, precisamos quantificar o SM 1080p.',
     link: '',
+    notas: ""
   },
   {
     id: 'TASK-7184',
@@ -122,6 +118,7 @@ export const projetosMock: Projeto[] = [
     dataCriacao: '2024-05-25',
     descricao: 'Precisamos programar o pixel THX do back-end!',
     link: '',
+    notas: ""
   },
   {
     id: 'TASK-5160',
@@ -134,6 +131,7 @@ export const projetosMock: Projeto[] = [
     dataCriacao: '2024-05-28',
     descricao: 'Calcular o bus não faz nada, precisamos navegar o back-end JSON!',
     link: '',
+    notas: ""
   },
   {
     id: 'TASK-9001',
@@ -146,5 +144,6 @@ export const projetosMock: Projeto[] = [
     dataCriacao: '2024-06-01',
     descricao: 'Integrar a API financeira ao dashboard principal e validar respostas.',
     link: '',
+    notas: ""
   }
 ]; 

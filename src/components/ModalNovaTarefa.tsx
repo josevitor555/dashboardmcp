@@ -1,6 +1,6 @@
 import * as React from 'react';
+import type { Projeto } from '../lib/projects-mock';
 import Updronw from './Updronw';
-import { useState } from 'react';
 
 const categorias = [
   'Blog', 'E-commerce', 'Portfólio', 'Site institucional', 'Landing Page', 'Dashboard administrativo', 'Outros'
@@ -26,11 +26,12 @@ function getToday() {
 interface ModalNovaTarefaProps {
   open: boolean;
   onClose: () => void;
-  onAdd: (novoProjeto: unknown) => void;
+  onAdd: (novoProjeto: Projeto) => void;
+  editingTask?: Projeto | null;
 }
 
-const ModalNovaTarefa: React.FC<ModalNovaTarefaProps> = ({ open, onClose, onAdd }) => {
-  const [form, setForm] = useState({
+const ModalNovaTarefa: React.FC<ModalNovaTarefaProps> = ({ open, onClose, onAdd, editingTask }) => {
+  const [form, setForm] = React.useState({
     nome: '',
     cliente: '',
     descricao: '',
@@ -43,20 +44,63 @@ const ModalNovaTarefa: React.FC<ModalNovaTarefaProps> = ({ open, onClose, onAdd 
     notas: '',
   });
 
+  // Preencher campos se for edição
+  React.useEffect(() => {
+    if (editingTask) {
+      setForm({
+        nome: editingTask.nome || '',
+        cliente: editingTask.cliente || '',
+        descricao: editingTask.descricao || '',
+        categoria: editingTask.categoria || categorias[0],
+        prioridade: editingTask.prioridade || 'media',
+        status: editingTask.status || 'planejamento',
+        dataCriacao: editingTask.dataCriacao || getToday(),
+        dataEntrega: editingTask.dataEntrega || '',
+        link: editingTask.link || '',
+        notas: editingTask.notas || '',
+      });
+    } else {
+      setForm({
+        nome: '',
+        cliente: '',
+        descricao: '',
+        categoria: categorias[0],
+        prioridade: 'media',
+        status: 'planejamento',
+        dataCriacao: getToday(),
+        dataEntrega: '',
+        link: '',
+        notas: '',
+      });
+    }
+  }, [editingTask, open]);
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }));
   }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const novoProjeto = {
-      id: `TASK-${Math.floor(Math.random() * 9000 + 1000)}`,
+    let clienteValue = form.cliente;
+    if (editingTask) {
+      // Se for edição, não inclua arroba de jeito nenhum
+      clienteValue = form.cliente.startsWith('@') ? form.cliente.slice(1) : form.cliente;
+    } else {
+      // Se for novo, adiciona arroba se não tiver
+      clienteValue = form.cliente.startsWith('@') ? form.cliente : `@${form.cliente}`;
+    }
+    // Se for edição, garanta que não há arroba no início
+    if (editingTask) {
+      clienteValue = clienteValue.replace(/^@+/, '');
+    }
+    const novoProjeto: Projeto = {
+      id: editingTask?.id || `TASK-${Math.floor(Math.random() * 9000 + 1000)}`,
       nome: form.nome,
-      cliente: form.cliente.startsWith('@') ? form.cliente : `@${form.cliente}`,
-      avatarUrl: undefined,
+      cliente: clienteValue,
+      avatarUrl: editingTask?.avatarUrl,
       categoria: form.categoria,
-      status: form.status,
-      prioridade: form.prioridade,
+      status: form.status as Projeto['status'],
+      prioridade: form.prioridade as Projeto['prioridade'],
       dataCriacao: form.dataCriacao,
       dataEntrega: form.dataEntrega,
       descricao: form.descricao,
@@ -71,7 +115,7 @@ const ModalNovaTarefa: React.FC<ModalNovaTarefaProps> = ({ open, onClose, onAdd 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <form onSubmit={handleSubmit} className="bg-card rounded-lg shadow-lg p-6 w-full max-w-lg flex flex-col gap-4">
-        <h3 className="text-xl font-bold mb-2">Nova Tarefa</h3>
+        <h3 className="text-xl font-bold mb-2">{editingTask ? 'Editar Tarefa' : 'Nova Tarefa'}</h3>
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium">Nome do Projeto</label>
           <input name="nome" required value={form.nome} onChange={handleChange} className="border border-border rounded px-3 py-2 bg-background text-foreground" placeholder="Ex: Landing Page do Zé do Táxi" />
@@ -126,7 +170,7 @@ const ModalNovaTarefa: React.FC<ModalNovaTarefaProps> = ({ open, onClose, onAdd 
         </div>
         <div className="flex justify-end gap-2 mt-2">
           <button type="button" onClick={onClose} className="btn-primary bg-muted text-foreground border border-border cursor-pointer">Cancelar</button>
-          <button type="submit" className="btn-primary cursor-pointer">Salvar</button>
+          <button type="submit" className="btn-primary cursor-pointer">{editingTask ? 'Salvar alterações' : 'Salvar'}</button>
         </div>
       </form>
     </div>
