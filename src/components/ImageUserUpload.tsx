@@ -10,17 +10,29 @@ interface Props {
 export function ImageUploadModal({ onClose, onUpload }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [fileDataUrl, setFileDataUrl] = useState<string | null>(null);
 
   const handleFileChange = () => {
     const file = inputRef.current?.files?.[0];
     if (!file) return;
 
+    setFileName(file.name);
+
     const reader = new FileReader();
     reader.onload = () => {
-      setPreview(reader.result as string);
-      onUpload(reader.result as string);
+      const result = reader.result as string;
+      setPreview(result);
+      setFileDataUrl(result);
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleSend = () => {
+    if (fileDataUrl) {
+      onUpload(fileDataUrl);
+      onClose();
+    }
   };
 
   return (
@@ -36,7 +48,7 @@ export function ImageUploadModal({ onClose, onUpload }: Props) {
           onClick={onClose}
           className="absolute top-2 right-2 p-1 rounded-full hover:bg-muted/30 transition"
         >
-          <X className="h-5 w-5 text-popover-foreground" />
+          <X className="h-5 w-5 text-popover-foreground cursor-pointer" />
         </button>
 
         <h2 className="text-lg font-semibold mb-4">Enviar Imagem</h2>
@@ -50,9 +62,15 @@ export function ImageUploadModal({ onClose, onUpload }: Props) {
             />
           </div>
         ) : (
-          <div className="mb-4 text-center text-muted-foreground">
+          <div className="mb-4 text-center text-muted-foreground cursor-pointer">
             Nenhuma imagem selecionada.
           </div>
+        )}
+
+        {fileName && (
+          <p className="text-sm text-center text-muted-foreground mb-4">
+            <span className="font-semibold">Arquivo:</span> {fileName}
+          </p>
         )}
 
         <input
@@ -60,15 +78,23 @@ export function ImageUploadModal({ onClose, onUpload }: Props) {
           type="file"
           accept="image/*"
           onChange={handleFileChange}
-          className="w-full rounded border border-input bg-input text-foreground file:text-sm file:border-0 file:bg-primary file:text-primary-foreground file:px-4 file:py-1.5"
+          className="w-full rounded border border-input bg-input text-foreground file:text-sm file:border-0 file:bg-primary file:text-primary-foreground file:px-4 file:py-1.5 cursor-pointer"
         />
 
-        <div className="mt-4 flex justify-end">
+        <div className="mt-6 flex justify-between gap-2">
           <button
             onClick={onClose}
-            className="btn-primary text-sm"
+            className="btn-secondary text-sm px-4 py-2 rounded-md cursor-pointer"
           >
-            Fechar
+            Cancelar
+          </button>
+
+          <button
+            onClick={handleSend}
+            disabled={!fileDataUrl}
+            className="btn-primary text-sm px-4 py-2 rounded-md cursor-pointer"
+          >
+            Enviar
           </button>
         </div>
       </motion.div>

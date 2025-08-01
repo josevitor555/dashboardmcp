@@ -248,7 +248,7 @@ const App = () => {
                           whileTap={{ scale: 0.95 }}
                           className="btn-primary flex items-center gap-1 cursor-pointer"
                           title="Subir imagem do cliente"
-                        onClick={() => openImageModal(projeto)}
+                          onClick={() => openImageModal(projeto)}
                         >
                           <User size={16} />
                         </motion.button>
@@ -321,9 +321,20 @@ const App = () => {
         editingTask={editingTask}
       />
 
+      {/* Com animação */}
+      {/* <AnimatePresence>
+        {showUploadModal && (
+          <ImageUploadModal
+            onClose={() => setShowUploadModal(false)}
+            onUpload={handleFileUpload}
+          />
+        )}
+      </AnimatePresence> */}
+
+      {/* Sem animação */}
       {showUploadModal && (
         <ImageUploadModal
-          onClose={closeImageModal}
+          onClose={() => setShowUploadModal(false)}
           onUpload={handleFileUpload}
         />
       )}
