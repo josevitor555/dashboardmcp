@@ -16,7 +16,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import Avatar from './components/Avatar';
 import ModalNovaTarefa from './components/ModalNovaTarefa';
 import Updronw from './components/Updronw';
-import ImageUploadModal from './components/ImageUserUpload';
+import { ImageUploadModal } from './components/ImageUserUpload';
 
 function getStatusVariant(status: string) {
   switch (status) {
@@ -96,19 +96,16 @@ const App = () => {
     setShowUploadModal(false);
   }
 
-  function handleFileUpload(file: File) {
+  function handleFileUpload(url: string) {
     if (uploadTargetProjeto) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const url = reader.result as string;
-        setProjetos(prev =>
-          prev.map(p =>
-            p.id === uploadTargetProjeto.id ? { ...p, avatarUrl: url } : p
-          )
-        );
-        closeImageModal();
-      };
-      reader.readAsDataURL(file);
+      setProjetos((prev) =>
+        prev.map((p) =>
+          p.id === uploadTargetProjeto.id
+            ? { ...p, avatarUrl: url }
+            : p
+        )
+      );
+      closeImageModal();
     }
   }
 
@@ -175,7 +172,7 @@ const App = () => {
           </div>
         </div>
       </div>
-      <div className="bg-card rounded-lg shadow p-6">
+      <div className="bg-card rounded-lg shadow p-6 overflow-x-auto">
         <h2 className="text-xl font-semibold mb-4">Projetos dos Clientes</h2>
         <div className="overflow-x-auto">
           <motion.table
@@ -224,7 +221,9 @@ const App = () => {
                             .map((n: string) => n[0])
                             .join('')
                             .toUpperCase()}
+                          src={projeto.avatarUrl}
                         />
+
                       </td>
                       <td className="px-4 py-2">{projeto.categoria}</td>
                       <td className="px-4 py-2 capitalize">
@@ -249,7 +248,7 @@ const App = () => {
                           whileTap={{ scale: 0.95 }}
                           className="btn-primary flex items-center gap-1 cursor-pointer"
                           title="Subir imagem do cliente"
-                          onClick={() => openImageModal(projeto)}
+                        onClick={() => openImageModal(projeto)}
                         >
                           <User size={16} />
                         </motion.button>
@@ -322,11 +321,12 @@ const App = () => {
         editingTask={editingTask}
       />
 
-      <ImageUploadModal
-        open={showUploadModal}
-        onClose={closeImageModal}
-        onUpload={handleFileUpload}
-      />
+      {showUploadModal && (
+        <ImageUploadModal
+          onClose={closeImageModal}
+          onUpload={handleFileUpload}
+        />
+      )}
     </div>
   );
 }

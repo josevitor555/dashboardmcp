@@ -5,6 +5,7 @@ import Updronw from './Updronw';
 const categorias = [
   'Blog', 'E-commerce', 'Portfólio', 'Site institucional', 'Landing Page', 'Dashboard administrativo', 'Outros'
 ];
+
 const statusDropdown = [
   { value: 'planejamento', label: 'Planejamento' },
   { value: 'iniciado', label: 'Iniciado' },
@@ -14,6 +15,7 @@ const statusDropdown = [
   { value: 'canceled', label: 'Cancelado' },
   { value: 'revisao', label: 'Revisão' },
 ];
+
 const prioridadesDropdown = [
   { value: 'alta', label: 'Alta' },
   { value: 'media', label: 'Média' },
@@ -81,18 +83,22 @@ const ModalNovaTarefa: React.FC<ModalNovaTarefaProps> = ({ open, onClose, onAdd,
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    
     let clienteValue = form.cliente;
-    if (editingTask) {
-      // Se for edição, não inclua arroba de jeito nenhum
-      clienteValue = form.cliente.startsWith('@') ? form.cliente.slice(1) : form.cliente;
-    } else {
-      // Se for novo, adiciona arroba se não tiver
-      clienteValue = form.cliente.startsWith('@') ? form.cliente : `@${form.cliente}`;
-    }
+    
+    // if (editingTask) {
+    //   // Se for edição, não inclua arroba de jeito nenhum
+    //   clienteValue = form.cliente.startsWith('@') ? form.cliente.slice(1) : form.cliente;
+    // } else {
+    //   // Se for novo, adiciona arroba se não tiver
+    //   clienteValue = form.cliente.startsWith('@') ? form.cliente : `@${form.cliente}`;
+    // }
+    
     // Se for edição, garanta que não há arroba no início
     if (editingTask) {
       clienteValue = clienteValue.replace(/^@+/, '');
     }
+
     const novoProjeto: Projeto = {
       id: editingTask?.id || `TASK-${Math.floor(Math.random() * 9000 + 1000)}`,
       nome: form.nome,

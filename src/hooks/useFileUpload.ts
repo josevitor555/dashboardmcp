@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 type FileWithPreview = File & { preview: string; id: string };
 
@@ -6,6 +6,8 @@ export function useFileUpload(options: { accept?: string; maxSize?: number }) {
   const [files, setFiles] = React.useState<FileWithPreview[]>([]);
   const [isDragging, setIsDragging] = React.useState(false);
   const [errors, setErrors] = React.useState<string[]>([]);
+
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   function generateId() {
     return Math.random().toString(36).slice(2, 9);
@@ -77,8 +79,6 @@ export function useFileUpload(options: { accept?: string; maxSize?: number }) {
     setFiles((f) => f.filter((file) => file.id !== id));
   }
 
-  const inputRef = React.useRef<HTMLInputElement>(null);
-
   function getInputProps() {
     return {
       ref: inputRef,
@@ -87,6 +87,7 @@ export function useFileUpload(options: { accept?: string; maxSize?: number }) {
       onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
           handleFiles(e.target.files);
+          e.target.value = ''; // <-- permite subir mesma imagem novamente
         }
       },
     };

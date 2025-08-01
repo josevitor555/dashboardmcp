@@ -1,118 +1,77 @@
-'use client';
-import * as React from 'react';
-import { AlertCircleIcon, ImageUpIcon, XIcon } from 'lucide-react';
-import { useFileUpload } from '@/hooks/useFileUpload';
+import { useRef, useState } from 'react';
+import { motion } from 'framer-motion';
+import { X } from 'lucide-react';
 
-type ImageUploadModalProps = {
-  open: boolean;
+interface Props {
   onClose: () => void;
-  onUpload: (file: File) => void;
-};
+  onUpload: (url: string) => void;
+}
 
-const ImageUploadModal = ({ open, onClose, onUpload }: ImageUploadModalProps) => {
-  const maxSizeMB = 5;
-  const maxSize = maxSizeMB * 1024 * 1024;
+export function ImageUploadModal({ onClose, onUpload }: Props) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [preview, setPreview] = useState<string | null>(null);
 
-  const [
-    { files, isDragging, errors },
-    {
-      handleDragEnter,
-      handleDragLeave,
-      handleDragOver,
-      handleDrop,
-      openFileDialog,
-      removeFile,
-      getInputProps,
-    },
-  ] = useFileUpload({ accept: 'image/*', maxSize });
+  const handleFileChange = () => {
+    const file = inputRef.current?.files?.[0];
+    if (!file) return;
 
-  const previewUrl = files[0]?.preview?.trim() || null;
-
-  React.useEffect(() => {
-    if (files[0]?.file) {
-      onUpload(files[0].file);
-    }
-  }, [files, onUpload]);
-
-  if (!open) return null;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPreview(reader.result as string);
+      onUpload(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="bg-card rounded-lg shadow-lg p-6 w-full max-w-md relative">
-        <h3 className="text-xl font-bold mb-4">Subir imagem do cliente</h3>
-
-        <div
-          role="button"
-          onClick={openFileDialog}
-          onDragEnter={handleDragEnter}
-          onDragLeave={handleDragLeave}
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
-          data-dragging={isDragging || undefined}
-          className="border-input hover:bg-accent/50 data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-52 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors cursor-pointer"
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.8 }}
+        transition={{ duration: 0.2 }}
+        className="relative w-full max-w-sm rounded-2xl p-6 bg-popover text-popover-foreground shadow-xl"
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 p-1 rounded-full hover:bg-muted/30 transition"
         >
-          <input {...getInputProps()} className="sr-only" aria-label="Upload file" />
+          <X className="h-5 w-5 text-popover-foreground" />
+        </button>
 
-          {previewUrl ? (
-            <div className="absolute inset-0">
-              <img
-                src={previewUrl}
-                alt={files[0]?.file?.name || 'Uploaded image'}
-                className="size-full object-cover"
-              />
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center px-4 py-3 text-center">
-              <div className="bg-background mb-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border">
-                <ImageUpIcon className="h-4 w-4 opacity-60" />
-              </div>
-              <p className="mb-1.5 text-sm font-medium">Drop your image here or click to browse</p>
-              <p className="text-muted-foreground text-xs">Max size: {maxSizeMB}MB</p>
-            </div>
-          )}
-        </div>
+        <h2 className="text-lg font-semibold mb-4">Enviar Imagem</h2>
 
-        {previewUrl && (
-          <div className="absolute top-4 right-4">
-            <button
-              type="button"
-              onClick={() => removeFile(files[0]?.id)}
-              className="focus-visible:border-ring focus-visible:ring-ring/50 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80"
-              aria-label="Remove image"
-            >
-              <XIcon className="h-4 w-4" />
-            </button>
+        {preview ? (
+          <div className="mb-4">
+            <img
+              src={preview}
+              alt="Prévia"
+              className="w-32 h-32 object-cover rounded-full mx-auto border border-input shadow-md"
+            />
+          </div>
+        ) : (
+          <div className="mb-4 text-center text-muted-foreground">
+            Nenhuma imagem selecionada.
           </div>
         )}
 
-        {errors.length > 0 && (
-          <div className="text-destructive flex items-center gap-1 text-xs mt-2" role="alert">
-            <AlertCircleIcon className="h-3 w-3 shrink-0" />
-            <span>{errors[0]}</span>
-          </div>
-        )}
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="w-full rounded border border-input bg-input text-foreground file:text-sm file:border-0 file:bg-primary file:text-primary-foreground file:px-4 file:py-1.5"
+        />
 
-        <p className="text-muted-foreground mt-2 text-center text-xs">
-          Single image uploader w/ max size ∙{' '}
-          <a
-            href="https://github.com/origin-space/originui/tree/main/docs/use-file-upload.md"
-            className="hover:text-foreground underline"
+        <div className="mt-4 flex justify-end">
+          <button
+            onClick={onClose}
+            className="btn-primary text-sm"
           >
-            API
-          </a>
-        </p>
-
-        <div className="mt-4 flex justify-end gap-2">
-          <button onClick={onClose} className="btn-primary bg-muted px-4 py-2 rounded">
-            Cancelar
-          </button>
-          <button onClick={onClose} className="btn-primary px-4 py-2 rounded">
-            Confirmar
+            Fechar
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
-};
-
-export default ImageUploadModal;
+}
