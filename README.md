@@ -8,7 +8,7 @@ Feels like magic? It's not — it's **contextual intelligence**.
 
 ---
 
-## MVP Features
+### MVP Features
 
 - [x] Add / update / delete tasks  
 - [x] Filter by priority and status  
@@ -19,7 +19,7 @@ Feels like magic? It's not — it's **contextual intelligence**.
 
 ---
 
-## Tech Stack
+### Tech Stack
 
 | Layer     | Technology                        |
 |-----------|-----------------------------------|
@@ -43,7 +43,7 @@ It’s not just autocomplete. It’s co-pilot design through shared understandin
 
 ---
 
-## Authentication (Coming Soon)
+### Authentication (Coming Soon)
 
 Authentication will be handled via:
 
@@ -57,7 +57,7 @@ Routes:
 - `GET /api/home/` — A protected route with JWT Auth
 ---
 
-## Project/Task Management (MongoDB)
+### Project/Task Management (MongoDB)
 
 Task data is stored in a **MongoDB** collection:
 
