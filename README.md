@@ -40,7 +40,6 @@ Routes:
 - `POST /api/login-user` — User login  
 - `DELETE /api/logout-account` — Delete user account
 - `GET /api/home/` — A protected route with JWT Auth
-- 
 ---
 
 ## Project/Task Management (MongoDB)
@@ -51,19 +50,6 @@ Routes:
 - `POST /api/register-task` — Create new task  
 - `PUT /api/update-task` — Edit existing task  
 - `DELETE /api/delete-task/:id` — Delete task by ID
----
-
-## Folder Structure
-
-/project-root
-
-| Backend     | FrontEnd                        |
-|-----------|-----------------------------------|
-| NodeJS  | React + Vite         |
-| MySQL        | Tailwind CSS + shadcn/ui + Lucide |
-| MongoDb | Framer Motion for Animation                    |
-| JavaScript   | React Route Dom       |
-| JWT Auth  |  TypeScript  |
 
 ---
 
