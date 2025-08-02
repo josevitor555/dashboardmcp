@@ -314,12 +314,14 @@ const App = () => {
         </div>
       </div>
 
-      <ModalNovaTarefa
-        open={modalOpen}
-        onClose={() => { setModalOpen(false); setEditingTask(null); }}
-        onAdd={handleAddOrUpdateProjeto}
-        editingTask={editingTask}
-      />
+      {modalOpen && (
+        <ModalNovaTarefa
+          open={modalOpen}
+          onClose={() => { setModalOpen(false); setEditingTask(null); }}
+          onAdd={handleAddOrUpdateProjeto}
+          editingTask={editingTask}
+        />
+      )}
 
       {/* Com animação */}
       {/* <AnimatePresence>

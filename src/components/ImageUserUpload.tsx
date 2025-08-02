@@ -36,7 +36,7 @@ export function ImageUploadModal({ onClose, onUpload }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -58,7 +58,7 @@ export function ImageUploadModal({ onClose, onUpload }: Props) {
             <img
               src={preview}
               alt="Prévia"
-              className="w-32 h-32 object-cover rounded-full mx-auto border border-input shadow-md"
+              className="w-26 h-26 object-cover mt-8 mb-8 rounded-full mx-auto border border-input shadow-md"
             />
           </div>
         ) : (
