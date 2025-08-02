@@ -3,6 +3,9 @@
 
 A modern task/project management dashboard built with **React**, **TypeScript**, and **Tailwind CSS**, designed to assist freelancers and agencies in organizing client projects. Includes smart filtering, priority tagging, smooth UI animations, and an AI-assisted context system (MCP).
 
+To build this project, we used a protocol called **MCP Server (Model Context Protocol)** — think of it as a living **manual** or **design library** for the AI. It acts as a contextual brain: every time you mention `@modal`, `@button`, or `@card`, the assistant knows *exactly* what UI component you're referring to and how to implement it.  
+Feels like magic? It's not — it's **contextual intelligence**.
+
 ---
 
 ## MVP Features
@@ -25,6 +28,18 @@ A modern task/project management dashboard built with **React**, **TypeScript**,
 | Animation | Framer Motion                     |
 | Backend   | Node.js (to be implemented)       |
 | AI Layer  | Model Context Protocol (MCP)      |
+
+---
+
+## What is MCP?
+
+An MCP Server is a central component within the Model Context Protocol (MCP) ecosystem. It acts as an intermediary that facilitates communication between AI models and various data sources and external tools. Essentially, the MCP Server manages access to these sources, allowing AI models to receive contextual information relevant to their tasks and make more informed decisions like:
+
+- Create layout from MCP UX/UI like shadcn-ui-server (I used this)
+- More context about the project
+- Each MCP is unique, regardless of the project context, they will all have their own tools to assist Artificial Intelligence
+
+It’s not just autocomplete. It’s co-pilot design through shared understanding.
 
 ---
 
